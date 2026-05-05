@@ -11,12 +11,12 @@ export const MOCK_PROMPT =
 
 /**
  * Returns true when we should skip the real LLM and use the mock instead.
- * Activates in development when no API key is present.
+ * Set MOCK=true in .env.local to force mock mode locally.
+ * Falls back to mock automatically when no API key is configured.
  */
 export function isMock(): boolean {
-  const isDev = import.meta.env.MODE !== 'production';
-  const hasKey = Boolean(import.meta.env.GOOGLE_GENERATIVE_AI_API_KEY ?? import.meta.env.OPENAI_API_KEY);
-  return isDev && !hasKey;
+  if (import.meta.env.MOCK === 'true') return true;
+  return !import.meta.env.GOOGLE_GENERATIVE_AI_API_KEY && !import.meta.env.OPENAI_API_KEY;
 }
 
 /**
