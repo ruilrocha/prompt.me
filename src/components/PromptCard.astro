@@ -1,0 +1,142 @@
+---
+interface Props {
+  prompt: string;
+  isMock?: boolean;
+  variant?: 'glow' | 'plus';
+}
+
+const { prompt, isMock = false, variant = 'glow' } = Astro.props;
+---
+
+{variant === 'glow' ? (
+  <section class="glow-card relative w-full max-w-[720px] overflow-hidden rounded-2xl border border-white/20 bg-black/30 p-10 backdrop-blur-md sm:p-14">
+    <div class="glow-corners"></div>
+    <blockquote class="prompt-text relative z-10 m-0 text-balance text-center text-[clamp(1.2rem,3vw,1.8rem)] font-black leading-[1.3] tracking-[-0.02em] text-white opacity-0" data-text={prompt}></blockquote>
+    {isMock && <p class="badge relative z-10 mt-7 text-center font-mono text-[0.65rem] font-bold uppercase tracking-[0.35em] text-green-300/90 opacity-0">✦ dev mock</p>}
+  </section>
+) : (
+  <section class="plus-card relative w-full max-w-[720px] overflow-hidden px-20 py-16 sm:px-24 sm:py-20">
+    <div class="corner-plus top-left">+</div>
+    <div class="corner-plus top-right">+</div>
+    <div class="corner-plus bottom-left">+</div>
+    <div class="corner-plus bottom-right">+</div>
+    <blockquote class="prompt-text relative z-10 m-0 text-balance text-center text-[clamp(1.2rem,3vw,1.8rem)] font-black leading-[1.3] tracking-[-0.02em] text-white opacity-0" data-text={prompt}></blockquote>
+    {isMock && <p class="badge relative z-10 mt-7 text-center font-mono text-[0.65rem] font-bold uppercase tracking-[0.35em] text-green-300/90 opacity-0">✦ dev mock</p>}
+  </section>
+)}
+
+<script>
+  function initTypewriter() {
+    const promptElement = document.querySelector('.prompt-text') as HTMLElement;
+    const badgeElement = document.querySelector('.badge') as HTMLElement;
+
+    if (promptElement) {
+      const text = promptElement.getAttribute('data-text') || '';
+      promptElement.textContent = '';
+      promptElement.style.opacity = '1';
+
+      let i = 0;
+      const typeSpeed = 30;
+
+      function typeWriter() {
+        if (i < text.length) {
+          promptElement.textContent += text.charAt(i);
+          i++;
+          setTimeout(typeWriter, typeSpeed);
+        } else if (badgeElement) {
+          setTimeout(() => {
+            badgeElement.style.opacity = '1';
+            badgeElement.style.transition = 'opacity 0.5s ease-in';
+          }, 300);
+        }
+      }
+
+      setTimeout(typeWriter, 500);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTypewriter);
+  } else {
+    initTypewriter();
+  }
+
+  document.addEventListener('astro:page-load', initTypewriter);
+</script>
+
+<style>
+  @keyframes glow-pulse {
+    0%, 100% {
+      opacity: 0.4;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  .glow-card {
+    box-shadow: 0 10px 60px rgba(0, 0, 0, 0.4);
+  }
+
+  .glow-corners {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at top left, rgba(220, 200, 255, 0.3) 0%, transparent 40%),
+      radial-gradient(circle at top right, rgba(200, 220, 255, 0.3) 0%, transparent 40%),
+      radial-gradient(circle at bottom left, rgba(255, 200, 230, 0.25) 0%, transparent 40%),
+      radial-gradient(circle at bottom right, rgba(220, 200, 255, 0.25) 0%, transparent 40%);
+    animation: glow-pulse 3.5s ease-in-out infinite;
+    border-radius: inherit;
+  }
+
+  .plus-card {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
+  .corner-plus {
+    position: absolute;
+    font-size: 3rem;
+    font-weight: 100;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  .corner-plus.top-left {
+    top: 1.5rem;
+    left: 1.5rem;
+  }
+
+  .corner-plus.top-right {
+    top: 1.5rem;
+    right: 1.5rem;
+  }
+
+  .corner-plus.bottom-left {
+    bottom: 1.5rem;
+    left: 1.5rem;
+  }
+
+  .corner-plus.bottom-right {
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+
+  .prompt-text {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Arial Black", "Impact", Arial, sans-serif;
+    font-style: normal;
+    font-weight: 900;
+    font-stretch: condensed;
+  }
+
+  .badge {
+    font-family: "Courier New", "Courier", monospace;
+    font-weight: 900;
+  }
+</style>
+

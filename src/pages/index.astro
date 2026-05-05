@@ -1,11 +1,56 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import PromptCard from '../components/PromptCard.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const baseUrl = Astro.url.origin;
+let prompt = 'Could not load today\'s prompt. Please try again later.';
+let isMock = false;
+
+try {
+  const res = await fetch(`${baseUrl}/api/prompt`);
+  if (res.ok) {
+    const data = await res.json();
+    prompt = data.prompt;
+    isMock = data.mock ?? false;
+  }
+} catch (e) {
+  // silently fall back to the default message above
+}
+
+const dateLabel = new Date().toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+}).replace(/\//g, '.');
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Prompt of the Day — prompt.me">
+  <main class="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 py-10 text-white sm:px-8">
+    <header class="mb-16 text-center">
+      <p class="date-label mb-4 text-[0.6rem] font-black uppercase tracking-[0.5em] text-white/50 opacity-70">{dateLabel}</p>
+      <h1 class="title text-balance text-[clamp(2.5rem,7vw,5rem)] font-black uppercase leading-[0.85] tracking-[-0.04em] text-white">Prompt<br/>of the<br/>Day</h1>
+    </header>
+
+    <PromptCard prompt={prompt} isMock={isMock} variant="glow" />
+  </main>
 </Layout>
+
+<style>
+  .title {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Arial Black", "Impact", Arial, sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    font-stretch: condensed;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    font-weight: 900;
+  }
+
+  .date-label {
+    font-family: "Courier New", "Courier", monospace;
+    letter-spacing: 0.5em;
+    font-weight: 900;
+  }
+</style>
+
+
