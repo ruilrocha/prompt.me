@@ -7,8 +7,9 @@ import { MOCK_PROMPT } from '../../lib/ai-provider';
 import { promptKey, today } from '../../lib/kv';
 
 export const GET: APIRoute = async () => {
-  const url = import.meta.env.UPSTASH_REDIS_REST_URL;
-  const token = import.meta.env.UPSTASH_REDIS_REST_TOKEN;
+  // Vercel Upstash integration uses KV_REST_API_* names; fall back to UPSTASH_* for manual setups.
+  const url = import.meta.env.KV_REST_API_URL ?? import.meta.env.UPSTASH_REDIS_REST_URL;
+  const token = import.meta.env.KV_REST_API_TOKEN ?? import.meta.env.UPSTASH_REDIS_REST_TOKEN;
 
   // No Redis credentials → return the dev mock immediately
   if (!url || !token) {

@@ -2,8 +2,9 @@ import { Redis } from '@upstash/redis';
 
 /** Shared Redis client — returns null when credentials are not configured (local dev). */
 export function getKv(): Redis | null {
-  const url = import.meta.env.UPSTASH_REDIS_REST_URL;
-  const token = import.meta.env.UPSTASH_REDIS_REST_TOKEN;
+  // Vercel Upstash integration uses KV_REST_API_* names; fall back to UPSTASH_* for manual setups.
+  const url = import.meta.env.KV_REST_API_URL ?? import.meta.env.UPSTASH_REDIS_REST_URL;
+  const token = import.meta.env.KV_REST_API_TOKEN ?? import.meta.env.UPSTASH_REDIS_REST_TOKEN;
   if (!url || !token) return null;
   return new Redis({ url, token });
 }
