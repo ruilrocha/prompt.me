@@ -1,5 +1,6 @@
 ---
 import backgroundImage from '../assets/image.jpg';
+import { Image } from 'astro:assets';
 import '../styles/global.css';
 
 type Props = {
@@ -19,7 +20,7 @@ const { title = 'prompt.me' } = Astro.props as Props;
 	</head>
 	<body>
 		<div class="bg-wrapper">
-			<img src={backgroundImage.src} alt="" class="bg-image" />
+			<Image src={backgroundImage} alt="" class="bg-image" priority={true} />
 			<div class="bg-overlay"></div>
 		</div>
 		<slot />
@@ -60,4 +61,3 @@ const { title = 'prompt.me' } = Astro.props as Props;
 		pointer-events: none;
 	}
 </style>
-
