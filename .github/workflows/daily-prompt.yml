@@ -1,0 +1,25 @@
+name: Daily Prompt Generation
+
+on:
+  schedule:
+    # Runs every day at 00:05 UTC (5 min after midnight)
+    - cron: '5 0 * * *'
+  workflow_dispatch: # allows manual trigger from the GitHub Actions UI
+
+jobs:
+  generate-prompt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call generate-prompt endpoint
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X GET \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.APP_URL }}/api/generate-prompt")
+          echo "Response status: $response"
+          if [ "$response" != "200" ]; then
+            echo "❌ Failed with status $response"
+            exit 1
+          fi
+          echo "✅ Prompt generated successfully"
+

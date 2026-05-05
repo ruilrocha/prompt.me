@@ -25,10 +25,10 @@ const dateLabel = new Date().toLocaleDateString('en-US', {
 ---
 
 <Layout title="Prompt of the Day — prompt.me">
-  <main class="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 py-10 text-white sm:px-8">
-    <header class="mb-16 text-center">
-      <p class="date-label mb-4 text-[0.6rem] font-black uppercase tracking-[0.5em] text-white/50 opacity-70">{dateLabel}</p>
-      <h1 class="title text-balance text-[clamp(2.5rem,7vw,5rem)] font-black uppercase leading-[0.85] tracking-[-0.04em] text-white">Prompt<br/>of the<br/>Day</h1>
+  <main class="relative z-10 flex min-h-screen flex-col items-center justify-start px-6 pt-16 pb-10 text-white sm:justify-center sm:pt-10 sm:px-8">
+    <header class="mb-10 text-center sm:mb-16">
+      <p class="date-label mb-3 text-[0.6rem] font-black uppercase tracking-[0.5em] text-white/50 opacity-70">{dateLabel}</p>
+      <h1 class="title text-balance text-[clamp(2.2rem,7vw,5rem)] font-black uppercase leading-[0.85] tracking-[-0.04em] text-white">Prompt<br/>of the<br/>Day</h1>
     </header>
 
     <PromptCard prompt={prompt} isMock={isMock} variant="glow" />
@@ -52,5 +52,3 @@ const dateLabel = new Date().toLocaleDateString('en-US', {
     font-weight: 900;
   }
 </style>
-
-
