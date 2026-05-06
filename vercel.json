@@ -1,9 +1,4 @@
 {
-  "crons": [
-    {
-      "path": "/api/generate-prompt",
-      "schedule": "0 0 * * *"
-    }
-  ]
+  "framework": "astro"
 }
 

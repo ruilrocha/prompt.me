@@ -2,26 +2,35 @@
 import Layout from '../layouts/Layout.astro';
 import PromptCard from '../components/PromptCard.astro';
 
-const baseUrl = Astro.url.origin;
+const backendUrl = import.meta.env.BACKEND_URL;
+const backendApiKey = import.meta.env.BACKEND_API_KEY;
 let prompt = 'Could not load today\'s prompt. Please try again later.';
-let isMock = false;
+let dateLabel = '';
 
 try {
-  const res = await fetch(`${baseUrl}/api/prompt`);
+  const res = await fetch(`${backendUrl}/prompts/latest`, {
+    headers: { 'x-api-key': backendApiKey },
+  });
   if (res.ok) {
     const data = await res.json();
     prompt = data.prompt;
-    isMock = data.mock ?? false;
+    // Use the date returned by the backend (format: YYYY-MM-DD)
+    if (data.date) {
+      const [y, m, d] = data.date.split('-');
+      dateLabel = `${m}.${d}.${y}`;
+    }
   }
 } catch (e) {
   // silently fall back to the default message above
 }
 
-const dateLabel = new Date().toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-}).replace(/\//g, '.');
+if (!dateLabel) {
+  dateLabel = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).replace(/\//g, '.');
+}
 ---
 
 <Layout title="Prompt of the Day — prompt.me">
@@ -31,7 +40,7 @@ const dateLabel = new Date().toLocaleDateString('en-US', {
       <h1 class="title text-balance text-[clamp(2.2rem,7vw,5rem)] font-black uppercase leading-[0.85] tracking-[-0.04em] text-white">Prompt<br/>of the<br/>Day</h1>
     </header>
 
-    <PromptCard prompt={prompt} isMock={isMock} variant="glow" />
+    <PromptCard prompt={prompt} variant="glow" />
   </main>
 </Layout>
 

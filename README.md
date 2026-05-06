@@ -1,46 +1,55 @@
-# Astro Starter Kit: Basics
+# prompt.me
 
-```sh
-npm create astro@latest -- --template basics
-```
+The frontend for **prompt.me** — a daily creative writing prompt site. Built with [Astro](https://astro.build) and deployed on Vercel.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Prompts are fetched at request time from a separate Hono backend. This app is purely a display layer — no AI calls, no database.
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+## Project Structure
 
 ```text
 /
 ├── public/
+│   ├── favicon.ico
 │   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
+├── src/
+│   ├── assets/
+│   │   └── image.jpg          # Background image
+│   ├── components/
+│   │   └── PromptCard.astro   # Card component (variants: glow | plus)
+│   ├── layouts/
+│   │   └── Layout.astro       # Base HTML layout with background
+│   ├── pages/
+│   │   └── index.astro        # Main page — fetches and displays today's prompt
+│   └── styles/
+│       └── global.css         # Tailwind base styles
+├── .env.example               # Required environment variables
 └── package.json
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Environment Variables
 
-## 🧞 Commands
+Copy `.env.example` to `.env.local` and fill in the values:
 
-All commands are run from the root of the project, from a terminal:
+```sh
+cp .env.example .env.local
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+| Variable | Description |
+| :------- | :---------- |
+| `BACKEND_URL` | Base URL of the Hono backend, e.g. `https://your-backend.vercel.app` |
+| `BACKEND_API_KEY` | Shared secret sent as `x-api-key` header to the backend |
 
-## 👀 Want to learn more?
+## Commands
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+| Command | Action |
+| :------ | :----- |
+| `npm install` | Install dependencies |
+| `npm run dev` | Start local dev server at `localhost:4321` |
+| `npm run build` | Build for production to `./dist/` |
+| `npm run preview` | Preview the production build locally |
+
+## Deployment
+
+Deploys automatically to Vercel on push. Set `BACKEND_URL` and `BACKEND_API_KEY` in Vercel → Settings → Environment Variables.
+
+The backend is a separate service responsible for AI prompt generation and storage.
