@@ -8,17 +8,17 @@ let prompt = 'Could not load today\'s prompt. Please try again later.';
 let dateLabel = '';
 
 try {
-  const res = await fetch(`${backendUrl}/prompts/latest`, {
-    headers: { 'x-api-key': backendApiKey },
+  const res = await fetch(`${backendUrl}/prompt`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': backendApiKey,
+    },
+    body: JSON.stringify({ query: '{ scenario }' }),
   });
   if (res.ok) {
-    const data = await res.json();
-    prompt = data.prompt;
-    // Use the date returned by the backend (format: YYYY-MM-DD)
-    if (data.date) {
-      const [y, m, d] = data.date.split('-');
-      dateLabel = `${m}.${d}.${y}`;
-    }
+    const { data } = await res.json();
+    if (data?.scenario) prompt = data.scenario;
   }
 } catch (e) {
   // silently fall back to the default message above
